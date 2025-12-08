@@ -1,6 +1,7 @@
 package storage
 
 import model.Task
+import model.Priority
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
@@ -33,7 +34,7 @@ class TaskStore(
         private val CSV_FORMAT =
             CSVFormat.DEFAULT
                 .builder()
-                .setHeader("id", "title", "completed", "created_at")
+                .setHeader("id", "title", "completed", "created_at", "priority")
                 .setSkipHeaderRecord(true)
                 .build()
 
@@ -74,6 +75,7 @@ class TaskStore(
                             title = record[1],
                             completed = record[2].toBoolean(),
                             createdAt = LocalDateTime.parse(record[3], DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                            priority = Priority.valueOf(record.get(4) ?: "NOT_URGENT")
                         )
                     } catch (e: IndexOutOfBoundsException) {
                         // CSV row has missing fields - skip this row
@@ -113,7 +115,7 @@ class TaskStore(
         if (!csvFile.exists() || csvFile.length() == EMPTY_FILE_SIZE) {
             csvFile.parentFile?.mkdirs()
             FileWriter(csvFile, false).use { writer ->
-                writer.write("id,title,completed,created_at\n")
+                writer.write("id,title,completed,created_at,priority\n")
             }
         }
 
@@ -124,6 +126,7 @@ class TaskStore(
                     task.title,
                     task.completed,
                     task.createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                    task.priority.name
                 )
             }
         }
@@ -213,6 +216,7 @@ class TaskStore(
                         task.title,
                         task.completed,
                         task.createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                        task.priority.name
                     )
                 }
             }
@@ -228,7 +232,7 @@ class TaskStore(
         csvFile.createNewFile()
         FileWriter(csvFile).use { writer ->
             CSVPrinter(writer, CSV_FORMAT).use { printer ->
-                printer.printRecord("id", "title", "completed", "created_at")
+                printer.printRecord("id", "title", "completed", "created_at", "priority")
             }
         }
     }

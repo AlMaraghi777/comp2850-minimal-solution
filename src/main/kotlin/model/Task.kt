@@ -16,11 +16,13 @@ import java.util.UUID
  * @property completed Whether task is done
  * @property createdAt Timestamp of creation
  */
+
 data class Task(
     val id: String = UUID.randomUUID().toString(),
     val title: String,
     val completed: Boolean = false,
     val createdAt: LocalDateTime = LocalDateTime.now(),
+    val priority: Priority = Priority.NOT_URGENT
 ) {
     companion object {
         /**
@@ -80,7 +82,7 @@ data class Task(
     fun toCSV(): String {
         val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
         val escapedTitle = title.replace("\"", "\"\"")
-        return "$id,\"$escapedTitle\",$completed,${createdAt.format(formatter)}"
+        return "$id,\"$escapedTitle\",$completed,${createdAt.format(formatter)},${priority.name}"
     }
 
     /**
@@ -104,6 +106,7 @@ data class Task(
             "completed" to completed,
             "createdAt" to createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
             "createdAtISO" to createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+            "priority" to priority.toDisplayString()
         )
 }
 
