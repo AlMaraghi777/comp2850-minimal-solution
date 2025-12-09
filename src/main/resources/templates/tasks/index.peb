@@ -52,7 +52,16 @@
                 {% if msg == "too_long" %}Title is too long (max 200 characters){% else %}Title is required. Please enter at least one character.{% endif %}
             </p>
             {% endif %}
-
+            <label for="Priority">Priority</label>
+            <select id="priority" name="priority">
+                <option value="NOT URGENT">Not urgent</option>
+                <option value="URGENT">Urgent</option>
+                <option value="VERY URGENT">Very urgent</option>
+            </select>
+            <label for="completed">
+                <input type="checkbox" id="completed" name="completed">
+                Mark as completed
+            </label>
             <button type="submit">Add Task</button>
         </form>
     </section>

@@ -1,5 +1,12 @@
 <li id="task-{{ task.id }}" class="task-view">
-  <span class="task-title">{{ task.title }}</span>
+  <div class="task-title">{{ task.title }}</div>
+  <div class="priority-badge">{{ task.priority }}</div>
+
+  {% if task.completed %}
+    <div class="status-badge completed">Completed</div>
+  {% else %}
+    <div class="status-badge not-completed">Not completed</div>
+  {% endif %}
 
   <form action="/tasks/{{ task.id }}/edit" method="get" style="display: inline;"
         hx-get="/tasks/{{ task.id }}/edit"

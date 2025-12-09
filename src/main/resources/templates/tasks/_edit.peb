@@ -15,6 +15,24 @@
 
     <small id="hint-{{ task.id }}">Keep it short and specific.</small>
 
+    <label for="priority-{{ task.id }}">Priority</label>
+    <select id="priority-{{ task.id }}" name="priority">
+      <option value="not urgent"
+        {% if task.priority == "not urgent" %}selected{% endif %}>
+        Not urgent
+      </option>
+
+      <option value="urgent"
+        {% if task.priority == "urgent" %}selected{% endif %}>
+        Urgent
+      </option>
+
+      <option value="very urgent"
+        {% if task.priority == "very urgent" %}selected{% endif %}>
+        Very urgent
+      </option>
+    </select>
+
     {% if error %}
       <p id="error-{{ task.id }}" class="error" role="alert" aria-live="assertive">
         {{ error }}
@@ -22,6 +40,15 @@
     {% else %}
       <p id="error-{{ task.id }}" class="visually-hidden" aria-live="assertive"></p>
     {% endif %}
+
+    <label for="completed-{{ task.id }}">
+      <input
+        type="checkbox"
+        id="completed-{{ task.id }}"
+        name="completed"
+        {% if task.completed %}checked{% endif %}>
+      Completed
+    </label>
 
     <button type="submit">Save</button>
     <a href="/tasks"

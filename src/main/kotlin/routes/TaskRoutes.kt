@@ -1,5 +1,6 @@
 package routes
 
+import model.Priority
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.encodeURLParameter
@@ -86,7 +87,7 @@ private suspend fun ApplicationCall.handleCreateTask(store: TaskStore) {
 
         when (val validation = Task.validate(title)) {
             is ValidationResult.Error -> handleCreateTaskError(store, title, query, validation)
-            ValidationResult.Success -> handleCreateTaskSuccess(store, title, query)
+            ValidationResult.Success -> handleCreateTaskSuccess(store, title, query, params)
         }
     }
 }
@@ -119,8 +120,16 @@ private suspend fun ApplicationCall.handleCreateTaskSuccess(
     store: TaskStore,
     title: String,
     query: String,
+    params: io.ktor.http.Parameters
 ) {
-    val task = Task(title = title)
+    val priority = model.Priority.fromString(params["priority"] ?: "not urgent")
+    val completed = params["completed"] == "on"
+
+    val task = Task(
+        title = title,
+        priority = priority,
+        completed = completed
+    )
     store.add(task)
 
     if (isHtmxRequest()) {
@@ -336,7 +345,12 @@ private suspend fun ApplicationCall.handleUpdateTask(store: TaskStore) {
             return@timed
         }
 
-        val newTitle = receiveParameters()["title"]?.trim() ?: ""
+        val params = receiveParameters()
+
+        val newTitle = params["title"]?.trim() ?: ""
+        val priority = model.Priority.fromString(params["priority"] ?: "not urgent")
+        val completed = params["completed"] == "on"
+
         val validation = Task.validate(newTitle)
 
         if (validation is ValidationResult.Error) {
@@ -368,7 +382,7 @@ private suspend fun ApplicationCall.handleUpdateTask(store: TaskStore) {
         }
 
         // Update task
-        val updated = task.copy(title = newTitle)
+        val updated = task.copy(title = newTitle, priority = priority, completed = completed)
         store.update(updated)
 
         if (isHtmxRequest()) {
