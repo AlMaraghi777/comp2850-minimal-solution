@@ -1,0 +1,36 @@
+{% extends "_layout/base.peb" %}
+
+{% block title %}Edit Task{% endblock %}
+
+{% block content %}
+<article>
+  <h1>Edit Task</h1>
+
+  <form action="/tasks/{{ task.id }}/edit" method="post">
+
+    <label for="title">Title</label>
+    <input
+      type="text"
+      id="title"
+      name="title"
+      value="{{ task.title }}"
+      required>
+
+    <label for="priority">Priority</label>
+    <select id="priority" name="priority">
+      <option value="not urgent" {% if task.priority == "not urgent" %}selected{% endif %}>Not urgent</option>
+      <option value="urgent" {% if task.priority == "urgent" %}selected{% endif %}>Urgent</option>
+      <option value="very urgent" {% if task.priority == "very urgent" %}selected{% endif %}>Very urgent</option>
+    </select>
+
+    <label>
+      <input type="checkbox" name="completed" {% if task.completed %}checked{% endif %}>
+      Completed
+    </label>
+
+    <button type="submit">Save</button>
+    <a href="/tasks" role="button">Cancel</a>
+
+  </form>
+</article>
+{% endblock %}

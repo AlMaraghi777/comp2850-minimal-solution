@@ -215,6 +215,17 @@ select:focus {
   font-size: 0.875rem;
 }
 
+.task-actions button {
+  background-color: #8B0000;  /* Dark red */
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+}
+
+.task-actions button:hover {
+  background-color: #5C0000;  /* Darker red on hover */
+}
+
 /* ========================================
    Responsive Design
    ======================================== */
@@ -271,4 +282,15 @@ select:focus {
   #status {
     display: none;
   }
+}
+
+button {
+  background-color: #8B0000 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 4px !important;
+}
+
+button:hover {
+  background-color: #5C0000 !important;
 }
